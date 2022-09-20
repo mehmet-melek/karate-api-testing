@@ -18,6 +18,7 @@ Feature: sample karate test script
     Then status 200
 
   @requirementKey=QTM-RQ-24
+  @testEntityKey=QTM-TC-56
   Scenario: create a user and then get it by id
     * def user =
       """
