@@ -6,7 +6,7 @@ function fn() {
   }
   var config = {
     env: env,
-    sutUrl: 'https://jsonplaceholder.typicode.com'
+    sutUrl: 'https://reqres.in'
   }
   if (env == 'tst') {
     config.sutUrl = 'https://jsonplaceholder.typicode.com'
