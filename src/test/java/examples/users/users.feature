@@ -1,58 +1,46 @@
-Feature: Users feature
+Feature: sample karate test script
+  for help, see: https://github.com/intuit/karate/wiki/IDE-Support
 
   Background:
     * url sutUrl
 
-  Scenario: Get all users and then validate data size per page
-    Given path 'api/users'
-    # query param
-    And param page = '1'
+
+  Scenario: get all users and then get the first user by id
+    Given path 'users'
     When method get
     Then status 200
-    # find field value
-    * def listSize = response.per_page
-    * print 'size should be: ', listSize
-    # find size of array
-    Then assert response.data.length == listSize
 
-  Scenario: Get all users and then validate users schema
-    Given path 'api/users'
+    * def first = response[0]
+
+    Given path 'users', first.id
     When method get
-    Then status 200
-    * def user = response.data
-    # create json schema
-    * def expectedUserSchema = { "id": #1,"email": "#string","first_name": "#string","last_name": "#string","avatar": "#string"}
-    # validate each item of json array
-    * match each user == expectedUserSchema
+    Then status 201
 
-  Scenario: Get all users and then validate response time
-    Given path 'api/users'
-    When method get
-    # validate response time
-    Then assert responseTime < 1000
+  Scenario: create a user and then get it by id
+    * def user =
+      """
+      {
+        "name": "Test User",
+        "username": "testuser",
+        "email": "test@user.com",
+        "address": {
+          "street": "Has No Name",
+          "suite": "Apt. 123",
+          "city": "Electri",bfdbdfbdfbdf
+        }
+      }
+      """
 
-  Scenario: Get all users and then validate response headers
-    Given path 'api/users'
-    When method get
-    # validate response headers
-    Then match header Server == 'cloudflare'
-
-
-  Scenario: Create user and then validate user created and response contains id
-    # create json from file
-    * def createUserRequest = read('/json/request/create-user-request.json')
-    Given path 'api/users'
-    And request createUserRequest
+    Given url 'https://jsonplaceholder.typicode.com/users'
+    And request user
     When method post
     Then status 201
-    * print response
-    # validate field is exist and not null
-    And match response contains {id: '#notnull'}
-    # validate field type and validate field is not exist
-    And match response contains { job: '#string', name: '#string', dummy: '#notpresent' }
 
+    * def id = response.id
+    * print 'created id is: ', id
 
-
-
-
-
+    Given path id
+    # When method get
+    # Then status 200
+    # And match response contains user
+  
