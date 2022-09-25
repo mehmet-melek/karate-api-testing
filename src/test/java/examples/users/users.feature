@@ -52,6 +52,12 @@ Feature: Users feature
     And match response contains { job: '#string', name: '#string', dummy: '#notpresent' }
 
 
+  @ignore
+  Scenario: Create users
+    Given path 'api/users'
+    And request {"name": '#(name)',"job": '#(job)'}
+    When method post
+    Then status 201
 
 
 
