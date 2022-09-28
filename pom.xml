@@ -63,6 +63,10 @@
                 <version>${maven.surefire.version}</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <systemPropertyVariables>
+                        <karate.env>${env.code}}</karate.env>
+                        <report.dir>${user.dir}/target/test-report/${artifactId}-${env.code}-${pkg.version.build.number}}</report.dir>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -74,7 +78,7 @@
                     <filepath>target/karate-reports\</filepath>
                     <format>cucumber/json</format>
                     <project>BK</project> <!-- or <qtmProject>Demo Project</qtmProject> -->
-                    <tsFolderPath>sample-folder-path</tsFolderPath>
+                    <testsuiteName>${artifactId}-${version}</testsuiteName>
                     <testcaseFields>{"description":"Automated Test case","testCaseType":"API","userDefinedFields":{"SUT":"App link"}}</testcaseFields>
                     <testsuiteFields>{"description":"Automated Test suite","userDefinedFields":{"Env":"Dev","Repo":"Api Test repo"}}</testsuiteFields>
                 </configuration>

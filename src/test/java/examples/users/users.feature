@@ -3,7 +3,7 @@ Feature: Users feature
   Background:
     * url sutUrl
 
-  Scenario: Get all users and then validate data size per page
+  Scenario: Get all users and then validate data array
     Given path 'api/users'
     # query param
     And param page = '1'
@@ -12,18 +12,31 @@ Feature: Users feature
     # find field value
     * def listSize = response.per_page
     * print 'size should be: ', listSize
+
+    Then match response.page == 1
+    #validate data field is array
+    And match response.data == '#[]'
     # find size of array
     Then assert response.data.length == listSize
+    And match response.data == '#[listSize]'
 
-  Scenario: Get all users and then validate users schema
+  Scenario: Get all users and then validate users data and schema
     Given path 'api/users'
     When method get
     Then status 200
     * def user = response.data
+
+    # any first_name field contains given value
+    And match response..first_name contains 'George'
+    And match response.data[*].first_name contains 'George'
     # create json schema
     * def expectedUserSchema = { "id": #1,"email": "#string","first_name": "#string","last_name": "#string","avatar": "#string"}
     # validate each item of json array
     * match each user == expectedUserSchema
+    # valida each user have an id
+    And match each response.data contains {id: '#notnull'}
+    #validate field is not exist
+    And match response !contains {temp : '#string'}
 
   Scenario: Get all users and then validate response time
     Given path 'api/users'
