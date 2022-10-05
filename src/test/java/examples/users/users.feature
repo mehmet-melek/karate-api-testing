@@ -57,7 +57,7 @@ Feature: Users feature
     Given path 'api/users'
     And request createUserRequest
     When method post
-    Then status 201
+    Then status 202
     * print response
     # validate field is exist and not null
     And match response contains {id: '#notnull'}
